@@ -5,7 +5,7 @@
 window.QUIZ_APP_DATA = {
     subjects: [
         // --- YEAR 1 ---
-        { year: 1, name: "Physiology", code: "PHY101", lessons: [{ name: "General Topics", code: "GEN" }] },
+        { year: 1, name: "Physiology", code: "PHY101", lessons: [{ name: "introduction", code: "intro" }] },
         
         // Histology: المادة التي تم تجزئتها إلى دروس
         { 
@@ -16,11 +16,11 @@ window.QUIZ_APP_DATA = {
                 // كود الدرس هو CELL1، وسيتم تحميل أسئلته من الملف المنفصل
                 { name: "Cell 1 Structure", code: "CELL1" }, 
                 // مثال لدرس جديد 
-                { name: "Epithelium Tissues", code: "EPI" },
             ]
         }, 
         
-        { year: 1, name: "Biochemistry", code: "BIO103", lessons: [{ name: "General Topics", code: "GEN" }] },
+        { year: 1, name: "Biochemistry", code: "BIO103", lessons: [ { name: "amino acids", code: "amino" }
+        ] },
         
         // --- YEAR 2 ---
         { year: 2, name: "Physiology", code: "PHY201", lessons: [{ name: "General Topics", code: "GEN" }] },
