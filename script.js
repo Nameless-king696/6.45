@@ -1,4 +1,4 @@
-// script.js (الكود الكامل والمصحح)
+// script.js (الكود الكامل والمحدث لجميع الوظائف)
 
 // المتغيرات SUBJECTS_DATA و QUESTIONS_BANK يتم تحميلها الآن من ملفات البيانات
 
@@ -12,6 +12,9 @@ let currentQuestionIndex = 0;
 let userAnswers = {};
 let quizSubmitted = false;
 
+// 🔊 متغير جديد لتحديد حالة الصوت (مفعل بشكل افتراضي)
+let isSoundEnabled = true; 
+
 const nextBtn = document.getElementById('next-btn');
 const prevBtn = document.getElementById('prev-btn');
 const questionsDisplay = document.getElementById('questions-display');
@@ -19,7 +22,10 @@ const resultContainer = document.getElementById('result');
 const subjectList = document.getElementById('subject-list');
 const lessonList = document.getElementById('lesson-list'); 
 
-// 🔊 تعريف عناصر الصوت (يجب أن تتطابق مع IDs في index.html)
+// 🔊 تعريف زر تبديل الصوت
+const soundToggleBtn = document.getElementById('sound-toggle-btn');
+
+// تعريف عناصر الصوت
 const correctSound = document.getElementById('correct-sound');
 const incorrectSound = document.getElementById('incorrect-sound');
 
@@ -27,6 +33,22 @@ const incorrectSound = document.getElementById('incorrect-sound');
 // --- NEW FUNCTION for Step 1 ---
 function selectUniversity() {
     navigateStep(1);
+}
+
+// 🔊 وظيفة تبديل حالة الصوت
+function toggleSound() {
+    isSoundEnabled = !isSoundEnabled; // عكس الحالة الحالية
+    
+    if (!isSoundEnabled) {
+        // إيقاف أي صوت يعمل وتحديث الزر للوضع الصامت
+        stopAllSounds(); 
+        soundToggleBtn.textContent = '🔇';
+        soundToggleBtn.title = 'Sound Disabled (Click to Enable)';
+    } else {
+        // تحديث الزر للوضع المفعل
+        soundToggleBtn.textContent = '🔊';
+        soundToggleBtn.title = 'Sound Enabled (Click to Disable)';
+    }
 }
 
 // --- Navigation Functions (Stages 1, 2, 3, 4) ---
@@ -45,10 +67,12 @@ function navigateStep(direction) {
     if (currentStep < 1) currentStep = 1;
     else if (currentStep > totalSteps) currentStep = totalSteps;
     
+    // إيقاف الصوت عند العودة من مرحلة الأسئلة
     if (currentStep < 5 && currentStep + direction > 5) {
         currentQuestionIndex = 0;
         userAnswers = {};
         quizSubmitted = false;
+        stopAllSounds(); 
     }
 
     document.getElementById(`step-${currentStep}`).classList.remove('hidden');
@@ -215,13 +239,15 @@ function revealAnswer(userAnswer, q, qNum) {
     const isCorrect = userAnswer === q.correctAnswer;
     const answerContainer = questionsDisplay.querySelector('.answers');
     
-    // 🔊 منطق تشغيل الصوت المُضاف
-    if (isCorrect) {
-        correctSound.currentTime = 0; // إرجاع الصوت للبداية لضمان التشغيل الفوري
-        correctSound.play();
-    } else {
-        incorrectSound.currentTime = 0;
-        incorrectSound.play();
+    // 🔊 منطق تشغيل الصوت المُعدَّل (يتحقق من حالة التفعيل)
+    if (isSoundEnabled) { 
+        if (isCorrect) {
+            correctSound.currentTime = 0; 
+            correctSound.play();
+        } else {
+            incorrectSound.currentTime = 0;
+            incorrectSound.play();
+        }
     }
 
     const feedbackDiv = document.getElementById(`feedback-${qNum}`);
@@ -306,10 +332,23 @@ function showQuestion() {
     updateControls();
 }
 
+// 🔊 دالة مساعدة لإيقاف تشغيل كل الأصوات
+function stopAllSounds() {
+    if (correctSound) {
+        correctSound.pause();
+        correctSound.currentTime = 0;
+    }
+    if (incorrectSound) {
+        incorrectSound.pause();
+        incorrectSound.currentTime = 0;
+    }
+}
+
 function navigateQuestion(direction) {
     if (currentQuestionIndex + direction < 0) {
         navigateStep(-1);
     } else {
+        stopAllSounds(); 
         currentQuestionIndex += direction;
         showQuestion();
     }
@@ -323,6 +362,9 @@ function continueQuizOrSubmit() {
         return;
     }
     
+    // 🔊 إيقاف الصوت قبل الانتقال للسؤال التالي
+    stopAllSounds(); 
+
     currentQuestionIndex++;
     
     if (currentQuestionIndex >= currentQuestions.length) {
@@ -422,4 +464,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
     currentStep = 1;
     updateControls();
+    
+    // ضبط الحالة الأولية للزر عند التحميل
+    if (soundToggleBtn) {
+        soundToggleBtn.textContent = isSoundEnabled ? '🔊' : '🔇';
+        soundToggleBtn.title = isSoundEnabled ? 'Sound Enabled (Click to Disable)' : 'Sound Disabled (Click to Enable)';
+    }
 });
