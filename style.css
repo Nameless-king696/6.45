@@ -40,20 +40,10 @@ body {
     display: none !important;
 }
 
-/* Stage 1: Fixed NUB Info */
+/* Stage 1: Fixed NUB Info - (أصبح يستخدم year-box/subject-box) */
 .fixed-info-container {
     text-align: center;
     margin-top: 20px;
-}
-.fixed-info {
-    font-size: 1.3em;
-    font-weight: bold;
-    color: #FF6347; 
-    padding: 15px;
-    display: inline-block;
-    background-color: #ffe0e0;
-    border: 2px solid #FF6347;
-    border-radius: 8px;
 }
 
 /* Stage 2 & 3 & 4: Selection Boxes (Vertical) */

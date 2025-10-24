@@ -20,6 +20,12 @@ const subjectList = document.getElementById('subject-list');
 const lessonList = document.getElementById('lesson-list'); 
 
 
+// --- NEW FUNCTION for Step 1 ---
+function selectUniversity() {
+    // الانتقال مباشرة إلى المرحلة 2 (اختيار السنة)
+    navigateStep(1);
+}
+
 // --- Navigation Functions (Stages 1, 2, 3, 4) ---
 
 function navigateStep(direction) {
@@ -29,6 +35,7 @@ function navigateStep(direction) {
         return; 
     }
     
+    // إخفاء المرحلة الحالية
     document.getElementById(`step-${currentStep}`).classList.add('hidden');
 
     currentStep += direction;
@@ -43,6 +50,7 @@ function navigateStep(direction) {
         quizSubmitted = false;
     }
 
+    // إظهار المرحلة الجديدة
     document.getElementById(`step-${currentStep}`).classList.remove('hidden');
 
     if (currentStep === 3) {
@@ -58,7 +66,7 @@ function navigateStep(direction) {
 }
 
 function validateCurrentStep() {
-    if (currentStep === 1) return true;
+    if (currentStep === 1) return true; // المرحلة 1 أصبحت زرًا بسيطًا لا يحتاج تحقق
     if (currentStep === 2 && !selectedYear) {
         alert("Please select an Academic Year before proceeding.");
         return false;
@@ -103,7 +111,6 @@ function selectSubject(code) {
 function populateSubjects() {
     subjectList.innerHTML = '';
     
-    // SUBJECTS_DATA يتم تحميله من الملف الخارجي
     const subjectsForYear = SUBJECTS_DATA.filter(sub => sub.year === selectedYear);
     
     if (subjectsForYear.length === 0) {
@@ -121,7 +128,7 @@ function populateSubjects() {
     });
 }
 
-// --- Step 4 Lesson Selection Function (NEW) ---
+// --- Step 4 Lesson Selection Function ---
 
 function selectLesson(code) {
     selectedLessonCode = code;
@@ -148,7 +155,20 @@ function populateLessons() {
         button.className = 'subject-box lesson-box';
         button.textContent = lesson.name;
         button.setAttribute('data-lesson-code', lesson.code);
-        button.onclick = () => selectLesson(lesson.code);
+        
+        // التحقق مما إذا كانت الأسئلة متوفرة لهذا الدرس قبل التمكين
+        const quizKey = selectedSubjectCode + "-" + lesson.code;
+        const questionsAvailable = QUESTIONS_BANK[quizKey] && QUESTIONS_BANK[quizKey].length > 0;
+        
+        if (questionsAvailable) {
+             button.onclick = () => selectLesson(lesson.code);
+        } else {
+             // تعطيل زر الدرس إذا لم يكن له أسئلة
+             button.disabled = true;
+             button.title = "No questions available for this lesson yet.";
+             button.style.opacity = 0.6;
+        }
+       
         lessonList.appendChild(button);
     });
 }
@@ -159,7 +179,7 @@ function populateLessons() {
 function loadAndBuildQuiz() {
     // المفتاح الآن هو كود المادة + كود الدرس
     const quizKey = selectedSubjectCode + "-" + selectedLessonCode;
-    // QUESTIONS_BANK يتم تحميله من الملفات الخارجية
+    // يتم قراءة البيانات من الكائن العالمي QUESTIONS_BANK
     currentQuestions = QUESTIONS_BANK[quizKey] || [];
     
     currentQuestionIndex = 0;
@@ -184,6 +204,7 @@ function handleAnswerSelection(event) {
     
     userAnswers[qNum] = userAnswer; 
     
+    // تعطيل جميع الخيارات بعد الإجابة
     questionsDisplay.querySelectorAll('input[type="radio"]').forEach(input => {
         input.disabled = true;
     });
@@ -281,6 +302,7 @@ function showQuestion() {
 
 function navigateQuestion(direction) {
     if (currentQuestionIndex + direction < 0) {
+        // العودة إلى المرحلة السابقة (اختيار الدرس)
         navigateStep(-1);
     } else {
         currentQuestionIndex += direction;
@@ -353,9 +375,11 @@ function updateControls() {
     const isInitialStage = currentStep < 5;
 
     if (isInitialStage) {
+        // زر الرجوع يظهر من المرحلة 2 ويؤدي للعودة للمرحلة السابقة
         prevBtn.classList.toggle('hidden', currentStep <= 1);
         nextBtn.classList.add('hidden'); 
         
+        // عند الرجوع من المرحلة 2 أو 3 أو 4، نستخدم navigateStep
         prevBtn.onclick = () => navigateStep(-1);
         return;
     }
@@ -370,7 +394,9 @@ function updateControls() {
         const isLastQuestion = currentQuestionIndex === currentQuestions.length - 1;
         const hasAnswered = userAnswers[currentQuestionIndex] !== undefined;
 
+        // زر الرجوع هنا يستخدم navigateQuestion للرجوع للسؤال السابق
         prevBtn.classList.toggle('hidden', currentQuestionIndex === 0);
+        prevBtn.onclick = () => navigateQuestion(-1);
         
         nextBtn.classList.remove('hidden');
         nextBtn.disabled = !hasAnswered; 
@@ -386,6 +412,7 @@ function updateControls() {
 
 // --- Initial Setup ---
 document.addEventListener('DOMContentLoaded', () => {
+    // إخفاء جميع الخطوات ما عدا الأولى عند تحميل الصفحة
     document.querySelectorAll('.step').forEach((step, index) => {
         if (index > 0) {
             step.classList.add('hidden');
@@ -395,9 +422,5 @@ document.addEventListener('DOMContentLoaded', () => {
     currentStep = 1;
     updateControls();
     
-    document.getElementById('step-1').addEventListener('click', () => {
-         if (currentStep === 1 && !quizSubmitted) {
-             navigateStep(1);
-         }
-    });
+    // تم إلغاء السماع لحدث النقر على step-1 بالكامل، والاعتماد على الزر الداخلي
 });

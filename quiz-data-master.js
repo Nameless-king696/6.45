@@ -1,21 +1,21 @@
 // quiz-data-master.js
-// هذا الملف يحتوي على هيكل المواد والدروس الرئيسية
+// هذا الملف يقوم بإنشاء الكائن العالمي (Global Object) الذي سيتم تجميع جميع البيانات فيه.
 
-// تعريف الكائن العالمي الذي سيجمع بيانات المواد والأسئلة من جميع الملفات الأخرى
+// تعريف الكائن العالمي window.QUIZ_APP_DATA
 window.QUIZ_APP_DATA = {
     subjects: [
         // --- YEAR 1 ---
         { year: 1, name: "Physiology", code: "PHY101", lessons: [{ name: "General Topics", code: "GEN" }] },
         
-        // Histology: المادة التي تم تجزئتها
+        // Histology: المادة التي تم تجزئتها إلى دروس
         { 
             year: 1, 
             name: "Histology", 
             code: "HIS102", 
             lessons: [
-                // سيتم تحميل أسئلة هذا الدرس من ملف HIS102-CELL1.js
+                // كود الدرس هو CELL1، وسيتم تحميل أسئلته من الملف المنفصل
                 { name: "Cell 1 Structure", code: "CELL1" }, 
-                // مثال لدرس آخر يمكنك إضافة ملفه لاحقاً
+                // مثال لدرس جديد 
                 { name: "Epithelium Tissues", code: "EPI" },
             ]
         }, 
@@ -26,10 +26,10 @@ window.QUIZ_APP_DATA = {
         { year: 2, name: "Physiology", code: "PHY201", lessons: [{ name: "General Topics", code: "GEN" }] },
         { year: 2, name: "Histology", code: "HIS202", lessons: [{ name: "General Topics", code: "GEN" }] },
         
-        // ... تكملة السنوات الأخرى
-        { year: 4, name: "Pediatrics", code: "PED401", lessons: [{ name: "General Topics", code: "GEN" }] },
+        // ... (يمكن إضافة المزيد من السنوات والمواد)
+        { year: 5, name: "Clinical Skills", code: "CLIN501", lessons: [{ name: "General Topics", code: "GEN" }] },
     ],
-    // هذا الكائن سيتم ملؤه من ملفات الدروس المنفصلة (مثل HIS102-CELL1.js)
+    // هذا الكائن سيتم ملؤه بواسطة ملفات الأسئلة المنفصلة (مثل HIS102-CELL1.js)
     questions: {} 
 };
 

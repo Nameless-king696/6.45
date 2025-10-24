@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" dir="ltr">
+<html lang="ar" dir="ltr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -16,9 +16,7 @@
 
             <div class="step" id="step-1">
                 <h2>1. Select University</h2>
-                <div class="fixed-info-container">
-                    <p class="fixed-info">New Beni Suef University (NUB)</p>
-                </div>
+                <button class="year-box" onclick="selectUniversity()">NUB</button>
             </div>
 
             <div class="step hidden" id="step-2">
@@ -55,15 +53,13 @@
         <div class="controls">
             <button id="prev-btn" class="control-btn hidden" onclick="navigateQuestion(-1)">Previous</button> 
             <button id="next-btn" class="control-btn hidden" onclick="continueQuizOrSubmit()">Continue</button>
-            <button id="submit-btn" class="control-btn hidden"></button>
         </div>
 
         <div id="result" class="result"></div>
     </div>
 
     <script src="quiz-data-master.js"></script> 
-    
     <script src="HIS102-CELL1.js"></script> 
     <script src="script.js"></script>
-</body>
+    </body>
 </html>
