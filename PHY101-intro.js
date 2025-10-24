@@ -1,4 +1,7 @@
-window.QUIZ_APP_DATA.questions["PHY101-intro"] = [
+// PHY101-intro.js
+
+// يجب أن يتطابق هذا الاسم مع المتغير QUESTIONS_BANK المستخدم في script.js
+QUESTIONS_BANK["PHY101-intro"] = [
     {
         question: "1. Infants have the greatest body water content due to which of the following causes?",
         answers: {
