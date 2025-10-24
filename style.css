@@ -177,4 +177,34 @@ body {
     background-color: #ffe6e6;
     padding: 5px;
     border-radius: 4px;
+    /* ... (التنسيقات الأخرى الموجودة لديك) ... */
+
+/* تنسيقات زر الرجوع الجديد */
+.go-back-btn {
+    /* يضمن أن يظهر الزر في أعلى اليمين (لأن اتجاه الصفحة rtl) */
+    position: absolute; 
+    top: 20px; 
+    right: 20px; /* لجعله في الزاوية اليمنى */
+    
+    background-color: #3498db;
+    color: white;
+    padding: 8px 15px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 0.9em;
+    z-index: 10; 
+}
+
+/* تعديل بسيط على عنصر step لكي يسمح للزر المطلق بالظهور داخله */
+.step {
+    position: relative; 
+    /* إعطاء مسافة أعلى لعرض زر الرجوع بدون تداخل مع العنوان */
+    padding-top: 50px; 
+}
+
+/* إخفاء زر الرجوع في المرحلة الأولى (إذا لم يكن لها ما يسبقها) */
+#step-1 .go-back-btn {
+    display: none;
+}
 }

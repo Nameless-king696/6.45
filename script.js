@@ -1,4 +1,4 @@
-// script.js (الكود الكامل والمحدث لجميع الوظائف)
+// script.js (الكود الكامل والمحدث)
 
 // المتغيرات SUBJECTS_DATA و QUESTIONS_BANK يتم تحميلها الآن من ملفات البيانات
 
@@ -35,6 +35,30 @@ function selectUniversity() {
     navigateStep(1);
 }
 
+// 💡 الدالة الجديدة: العودة إلى الخطوة 1 وإعادة تهيئة حالة الاختبار
+function goToStartStep() {
+    // 1. إعادة تعيين جميع المتغيرات المحددة
+    selectedYear = null;
+    selectedSubjectCode = null;
+    selectedLessonCode = null;
+    currentQuestions = [];
+    currentQuestionIndex = 0;
+    userAnswers = {};
+    quizSubmitted = false;
+    
+    // 2. إيقاف أي صوت يعمل
+    stopAllSounds(); 
+    
+    // 3. الانتقال إلى الخطوة 1
+    // لإجبار الانتقال إلى 1 بغض النظر عن الخطوة الحالية، نستخدم الفرق بين الخطوة الحالية و 1
+    // (مثال: إذا كنا في الخطوة 5، فـ navigateStep(1-5) = navigateStep(-4))
+    navigateStep(1 - currentStep); 
+    
+    // 4. إزالة أي نتائج سابقة
+    resultContainer.innerHTML = '';
+}
+
+
 // 🔊 وظيفة تبديل حالة الصوت
 function toggleSound() {
     isSoundEnabled = !isSoundEnabled; // عكس الحالة الحالية
@@ -54,12 +78,14 @@ function toggleSound() {
 // --- Navigation Functions (Stages 1, 2, 3, 4) ---
 
 function navigateStep(direction) {
-    if (quizSubmitted) return; 
+    if (quizSubmitted && direction > 0) return; // منع التقدم إذا تم إنهاء الاختبار
 
+    // التحقق من صحة الخطوة قبل التقدم (فقط للاتجاه الموجب)
     if (direction > 0 && !validateCurrentStep()) {
         return; 
     }
     
+    // إخفاء الخطوة الحالية
     document.getElementById(`step-${currentStep}`).classList.add('hidden');
 
     currentStep += direction;
@@ -67,16 +93,21 @@ function navigateStep(direction) {
     if (currentStep < 1) currentStep = 1;
     else if (currentStep > totalSteps) currentStep = totalSteps;
     
-    // إيقاف الصوت عند العودة من مرحلة الأسئلة
+    // ملاحظة: وظيفة goToStartStep() تقوم بالفعل بإعادة تعيين كل شيء.
+    // هذا الجزء لم يعد ضرورياً إذا كنا نعتمد على goToStartStep() للرجوع الكامل.
+    /*
     if (currentStep < 5 && currentStep + direction > 5) {
         currentQuestionIndex = 0;
         userAnswers = {};
         quizSubmitted = false;
         stopAllSounds(); 
     }
+    */
 
+    // إظهار الخطوة الجديدة
     document.getElementById(`step-${currentStep}`).classList.remove('hidden');
 
+    // تنفيذ وظائف التعبئة عند الوصول للخطوات الجديدة
     if (currentStep === 3) {
         populateSubjects();
         selectedLessonCode = null; 
@@ -332,6 +363,27 @@ function showQuestion() {
     updateControls();
 }
 
+// 💡 وظيفة عرض كل الإجابات (تم استخدامها في HTML)
+function revealAllAnswers() {
+    if (currentQuestions.length === 0) {
+        alert("No questions loaded to reveal answers.");
+        return;
+    }
+
+    // 1. إيقاف أي صوت يعمل
+    stopAllSounds();
+
+    // 2. ملء إجابات المستخدم بالإجابات الصحيحة
+    currentQuestions.forEach((q, index) => {
+        userAnswers[index] = q.correctAnswer; 
+    });
+    
+    // 3. تجاوز مرحلة الأسئلة والذهاب مباشرة إلى الملخص
+    currentQuestionIndex = currentQuestions.length;
+    showFinalSummary();
+}
+
+
 // 🔊 دالة مساعدة لإيقاف تشغيل كل الأصوات
 function stopAllSounds() {
     if (correctSound) {
@@ -346,7 +398,8 @@ function stopAllSounds() {
 
 function navigateQuestion(direction) {
     if (currentQuestionIndex + direction < 0) {
-        navigateStep(-1);
+        // الرجوع للخطوة السابقة (اختيار الفصل/الدرس) 
+        navigateStep(-1); 
     } else {
         stopAllSounds(); 
         currentQuestionIndex += direction;
@@ -420,18 +473,25 @@ function showFinalSummary() {
 function updateControls() {
     const isQuizStage = currentStep === 5 && !quizSubmitted; 
     const isInitialStage = currentStep < 5;
+    
+    const revealAllBtn = document.querySelector('#step-5 button[onclick="revealAllAnswers()"]');
 
     if (isInitialStage) {
-        prevBtn.classList.toggle('hidden', currentStep <= 1);
+        // أزرار التحكم بالأسئلة مخفية في المراحل الأولى
+        prevBtn.classList.add('hidden'); 
         nextBtn.classList.add('hidden'); 
         
-        prevBtn.onclick = () => navigateStep(-1);
+        prevBtn.onclick = () => navigateStep(-1); // زر الرجوع (غير المرئي)
+        // 💡 إخفاء زر الإجابات في المراحل الأولى
+        if (revealAllBtn) revealAllBtn.classList.add('hidden');
         return;
     }
 
     if (quizSubmitted) {
         prevBtn.classList.add('hidden');
         nextBtn.classList.add('hidden');
+        // 💡 إخفاء زر الإجابات بعد إظهار الملخص
+        if (revealAllBtn) revealAllBtn.classList.add('hidden');
         return;
     }
 
@@ -440,7 +500,7 @@ function updateControls() {
         const hasAnswered = userAnswers[currentQuestionIndex] !== undefined;
 
         prevBtn.classList.toggle('hidden', currentQuestionIndex === 0);
-        prevBtn.onclick = () => navigateQuestion(-1);
+        prevBtn.onclick = () => navigateQuestion(-1); 
         
         nextBtn.classList.remove('hidden');
         nextBtn.disabled = !hasAnswered; 
@@ -450,6 +510,8 @@ function updateControls() {
         } else {
             nextBtn.textContent = 'Continue (Next Question)';
         }
+        // 💡 إظهار زر الإجابات في مرحلة الأسئلة
+        if (revealAllBtn) revealAllBtn.classList.remove('hidden');
     }
 }
 

@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <title>Med Brainwave - Multi-Stage Quiz</title>
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="style.css"> 
 </head>
 <body>
 
@@ -27,6 +27,7 @@
             </div>
 
             <div class="step hidden" id="step-2">
+                <button class="control-btn go-back-btn" onclick="goToStartStep()">Go to Start</button>
                 <h2>2. Select Academic Year</h2>
                 <div class="year-selection">
                     <button class="year-box" data-year="1" onclick="selectYear(1)">Year 1</button>
@@ -38,19 +39,27 @@
             </div>
 
             <div class="step hidden" id="step-3">
+                <button class="control-btn go-back-btn" onclick="goToStartStep()">Go to Start</button>
                 <h2>3. Select Subject</h2>
                 <div id="subject-list" class="subject-selection">
                     </div>
             </div>
 
             <div class="step hidden" id="step-4">
+                <button class="control-btn go-back-btn" onclick="goToStartStep()">Go to Start</button>
                 <h2>4. Select Lesson/Chapter</h2>
                 <div id="lesson-list" class="subject-selection">
                     </div>
             </div>
 
             <div class="step hidden" id="step-5">
+                <button class="control-btn go-back-btn" onclick="goToStartStep()">Go to Start</button>
                 <h2>5. Answer the Questions</h2>
+                
+                <button class="control-btn" onclick="revealAllAnswers()" style="margin-bottom: 20px; background-color: #f39c12; color: white;">
+                    Reveal All Answers
+                </button>
+
                 <div id="questions-display">
                     </div>
             </div>
