@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Med Brainwave - Multi-Stage Quiz</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <div class="container">
+        <h1 class="centered-title">Med Brainwave</h1>
+
+        <div id="quiz-container">
+
+            <div class="step" id="step-1">
+                <h2>1. Select University</h2>
+                <div class="fixed-info-container">
+                    <p class="fixed-info">New Beni Suef University (NUB)</p>
+                </div>
+            </div>
+
+            <div class="step hidden" id="step-2">
+                <h2>2. Select Academic Year</h2>
+                <div class="year-selection">
+                    <button class="year-box" data-year="1" onclick="selectYear(1)">Year 1</button>
+                    <button class="year-box" data-year="2" onclick="selectYear(2)">Year 2</button>
+                    <button class="year-box" data-year="3" onclick="selectYear(3)">Year 3</button>
+                    <button class="year-box" data-year="4" onclick="selectYear(4)">Year 4</button>
+                    <button class="year-box" data-year="5" onclick="selectYear(5)">Year 5</button>
+                </div>
+            </div>
+
+            <div class="step hidden" id="step-3">
+                <h2>3. Select Subject</h2>
+                <div id="subject-list" class="subject-selection">
+                    </div>
+            </div>
+
+            <div class="step hidden" id="step-4">
+                <h2>4. Select Lesson/Chapter</h2>
+                <div id="lesson-list" class="subject-selection">
+                    </div>
+            </div>
+
+            <div class="step hidden" id="step-5">
+                <h2>5. Answer the Questions</h2>
+                <div id="questions-display">
+                    </div>
+            </div>
+
+        </div>
+
+        <div class="controls">
+            <button id="prev-btn" class="control-btn hidden" onclick="navigateQuestion(-1)">Previous</button> 
+            <button id="next-btn" class="control-btn hidden" onclick="continueQuizOrSubmit()">Continue</button>
+            <button id="submit-btn" class="control-btn hidden"></button>
+        </div>
+
+        <div id="result" class="result"></div>
+    </div>
+
+    <script src="quiz-data-master.js"></script> 
+    
+    <script src="HIS102-CELL1.js"></script> 
+    <script src="script.js"></script>
+</body>
+</html>
