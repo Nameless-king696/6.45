@@ -25,6 +25,10 @@ window.QUIZ_APP_DATA = {
         // --- YEAR 2 ---
         { year: 2, name: "Physiology", code: "PHY201", lessons: [{ name: "General Topics", code: "GEN" }] },
         { year: 2, name: "Histology", code: "HIS202", lessons: [{ name: "General Topics", code: "GEN" }] },
+        { year: 3, name: "ENT", code: "ENT301", lessons: [{ name: "General Topics", code: "GEN" }] },
+        { year: 4, name: "MEDICINE", code: "MED401", lessons: [{ name: "CHEST", code: "GEN" }] },
+
+
         
         // ... (يمكن إضافة المزيد من السنوات والمواد)
         { year: 5, name: "Clinical Skills", code: "CLIN501", lessons: [{ name: "General Topics", code: "GEN" }] },
