@@ -4,11 +4,12 @@ body {
     background: linear-gradient(135deg, #FF6347 0%, #4682B4 100%); 
     display: flex;
     justify-content: center;
-    align-items: center;
+    align-items: flex-start;
     min-height: 100vh;
     margin: 0;
-    direction: ltr; 
-    text-align: left;
+    /* اتجاه الـ body يبقى rtl لترتيب عناصر الصفحة الرئيسية */
+    direction: rtl; 
+    text-align: right; 
     padding: 20px; 
     box-sizing: border-box;
 }
@@ -23,8 +24,7 @@ body {
     max-width: 800px; 
     
     opacity: 0.95;
-    margin-left: auto;
-    margin-right: auto;
+    margin: 20px auto;
 }
 
 .centered-title {
@@ -40,7 +40,7 @@ body {
     display: none !important;
 }
 
-/* Stage 1: Fixed NUB Info - (أصبح يستخدم year-box/subject-box) */
+/* Stage 1: Fixed NUB Info */
 .fixed-info-container {
     text-align: center;
     margin-top: 20px;
@@ -81,12 +81,56 @@ body {
     border-color: #4682B4 !important;
 }
 
-/* Stage 5: Questions Styling */
+
+/* --- Step & Go Back Button Styling --- */
+
+.step {
+    position: relative; 
+    padding-top: 50px; /* مسافة للزر في الأعلى */
+}
+
+.step h2 {
+    text-align: center;
+    color: #2c3e50;
+    margin-bottom: 25px;
+}
+
+/* تنسيقات زر الرجوع (Go to Start) */
+.go-back-btn {
+    position: absolute; 
+    top: 20px; 
+    left: 20px; /* تم وضعه في اليسار ليناسب اتجاه الصفحة rtl */
+    
+    background-color: #e74c3c;
+    color: white;
+    padding: 8px 15px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 0.9em;
+    z-index: 10; 
+}
+
+/* إخفاء زر الرجوع في المرحلة الأولى */
+#step-1 .go-back-btn {
+    display: none;
+}
+
+
+/* --- Stage 5: Questions Styling (Fixing direction to LTR) --- */
+
+/* فرض الاتجاه من اليسار لليمين على حاوية الأسئلة */
+#questions-display {
+    direction: ltr;
+    text-align: left;
+}
+
 .question {
     font-size: 1.15em;
     font-weight: bold;
     margin: 20px 0 10px 0;
     color: #333;
+    text-align: left; /* محاذاة النص لليسار */
 }
 
 /* تنسيق خيارات الإجابات */
@@ -98,6 +142,7 @@ body {
     border-radius: 6px;
     cursor: pointer;
     transition: background-color 0.3s;
+    text-align: left; /* محاذاة النص لليسار */
 }
 
 .answers label:hover {
@@ -120,14 +165,25 @@ body {
     margin-top: 15px;
     padding: 15px;
     background-color: #f0f0ff; 
-    border-left: 5px solid #4682B4;
+    /* حدود الشرح على اليسار */
+    border-left: 5px solid #4682B4; 
+    border-right: none; 
     border-radius: 4px;
     font-style: normal;
     color: #333;
     display: none; 
+    text-align: left; /* محاذاة النص لليسار */
 }
 
-/* Result and Controls */
+
+/* --- Result and Controls (الإخفاء وتنسيق النتيجة) --- */
+
+/* القاعدة لإخفاء المستطيل (#result) عندما يكون فارغاً */
+#result:empty {
+    display: none; 
+}
+
+/* تنسيق لعنصر النتيجة #result عند ملئه */
 .result {
     margin-top: 20px;
     padding: 15px;
@@ -135,12 +191,15 @@ body {
     font-size: 1.3em;
     font-weight: bold;
     color: #333;
-    border: 1px solid #ddd;
+    background-color: transparent !important; 
+    border: none !important; 
     border-radius: 5px;
 }
 
 .controls {
     display: flex;
+    /* ✅ التعديل: عكس ترتيب الأزرار لجعل "Next" على اليمين */
+    flex-direction: row-reverse; 
     justify-content: space-between;
     margin-top: 30px;
 }
@@ -154,7 +213,10 @@ body {
     transition: background-color 0.3s;
 }
 
-#prev-btn { background-color: #6c757d; color: white; }
+#prev-btn { 
+    background-color: #6c757d; 
+    color: white; 
+}
 #next-btn { 
     background-color: #4682B4; 
     color: white; 
@@ -177,34 +239,13 @@ body {
     background-color: #ffe6e6;
     padding: 5px;
     border-radius: 4px;
-    /* ... (التنسيقات الأخرى الموجودة لديك) ... */
-
-/* تنسيقات زر الرجوع الجديد */
-.go-back-btn {
-    /* يضمن أن يظهر الزر في أعلى اليمين (لأن اتجاه الصفحة rtl) */
-    position: absolute; 
-    top: 20px; 
-    right: 20px; /* لجعله في الزاوية اليمنى */
-    
-    background-color: #3498db;
-    color: white;
-    padding: 8px 15px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 0.9em;
-    z-index: 10; 
 }
-
-/* تعديل بسيط على عنصر step لكي يسمح للزر المطلق بالظهور داخله */
-.step {
-    position: relative; 
-    /* إعطاء مسافة أعلى لعرض زر الرجوع بدون تداخل مع العنوان */
-    padding-top: 50px; 
-}
-
-/* إخفاء زر الرجوع في المرحلة الأولى (إذا لم يكن لها ما يسبقها) */
-#step-1 .go-back-btn {
-    display: none;
-}
+.footer-credit {
+    text-align: center;
+    margin-top: 40px;
+    padding: 15px 0;
+    font-size: 0.8em;
+    color: #888;
+    border-top: 1px solid #eee; /* ترك خط فاصل خفيف */
+    width: 100%;
 }
